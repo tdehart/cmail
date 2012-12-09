@@ -1,0 +1,157 @@
+ <% title "View Ballot" %>
+<%= render :partial => "ballots/show/buttons" %>
+<div id="email_header">
+  <% if !@myvote.nil? %>
+    <% if @ballot.myballots_type == "Tag" %>
+      <% if @ballot.vote_type == "add_tag_member" %>
+        Add Member Vote
+      <% elsif @ballot.vote_type == "remove_tag_member" %>
+        Remove Member Vote
+      <% elsif @ballot.vote_type == "new_tag" %>
+        New Tag Vote
+      <% end %>
+    <% elsif @ballot.myballots_type == "Email" %>
+      <strong>
+        Email Exception Vote
+      </strong>
+    <% end %>
+    <% if @myvote.approval.nil? and @ballot.over == false %>
+      <span id="header_buttons">
+        <%= link_to("Vote Yes", @ballot, :class => "buttons", :id => "vote_yes") %>
+        <%= link_to("Vote No", @ballot, :class => "buttons", :id => "vote_no") %>
+      <% end %>
+    </span>
+  </div>
+
+  <% form_for(@myvote, :remote => true) do |f| %>
+    <%= hidden_field_tag("approval", @myvote.approval) %>
+  <% end %>
+
+  <div id="show_content">
+    <% if @ballot.vote_type == "add_tag_member" %>
+      <h2 id="green_tag_display">
+        <% if User.find(@ballot.member_id) == current_user.id %>
+          <%= User.find(@ballot.author_id) %> has invited you to join a community tag!
+        <% else %>
+          <%= User.find(@ballot.author_id).name %> wants to invite <%= User.find(@ballot.member_id).name %> (<%= User.find(@ballot.member_id) %>) to the community tag.
+        <% end %>
+      </h2>
+      <div id="exception_vote_email">
+        <strong>Name:</strong> <%= @ballot.myballots.name %><br />
+        <strong>Voting Members:</strong> <%= @ballot.users.join(", ") %><br />
+        <strong>Description:</strong> <%= @ballot.myballots.description %> <br />
+      </div>
+    <% elsif @ballot.vote_type == "new_tag" %>
+      <h2 id="green_tag_display">
+        <%= User.find(@ballot.author_id) %> has created a new community tag!
+      </h2>
+      <br />
+      <div id="exception_vote_email">
+        <strong>Name:</strong> <%= @ballot.myballots.name %><br />
+        <strong>Voting Members:</strong> <%= @ballot.users.join(", ") %><br />
+        <strong>Description:</strong> <%= @ballot.myballots.description %> <br />
+      </div>
+      <br />
+    <% elsif @ballot.vote_type == "remove_tag_member" %>
+      <h2 id="red_tag_display"><%= User.find(@ballot.author_id) %> wants to remove <%= User.find(@ballot.member_id) %> from the community tag</h2>
+      <div id="exception_vote_email">
+        <strong>Name:</strong> <%= @ballot.myballots.name %><br />
+        <strong>Voting Members:</strong> <%= @ballot.users.join(", ") %><br />
+        <strong>Description:</strong> <%= @ballot.myballots.description %> <br />
+      </div>
+    <% elsif @ballot.vote_type == "exception" %>
+      <h2 id="red_tag_display"><%= User.find(@ballot.author_id) %> wants to make an exception</h2>
+      <div id="exception_vote_email">
+        <strong>From:</strong> <%= User.find(@email.author_id).name %><br />
+        <strong>To:</strong> <%= @email.users.join(", ") %><br />
+        <strong>Tags:</strong>
+        <% @email.tags.each do |t| %>
+          <em><%= t.name %></em> <%= " (" + t.users.join(", ") + ")" %><% if t != @email.tags.last %>, <% end %><% end %><br />
+        <strong>Subject:</strong> <%= @email.title %> <br />
+        <strong>Body: <%= @email.body %> </strong><br />
+      </div><br />
+    <% end %>
+    <% if @myvote.approval %>
+      <%= image_tag("thumb_up.png", :size => "20x20") %> You voted 'Yes'
+    <% elsif @myvote.approval == false %>
+      <%= image_tag("thumb_down.png", :size => "20x20") %> You voted 'No'
+    <% end %>
+    <br />
+
+    <% if @ballot.over == false %>
+      <%= image_tag("vote.jpg", :size => "20x20") %> Voting in progress
+    <% elsif @ballot.outcome == 'success' %>
+      <%= image_tag("checkmark.png", :size => "20x20") %> Vote passed
+    <% elsif @ballot.outcome == 'failure' %>
+      <%= image_tag("xmark.png", :size => "20x20") %> Vote failed to pass
+    <% end %>
+
+
+
+  </div>
+<% else %>
+  <% if @ballot.myballots_type == "Tag" %>
+    <strong><%= link_to @ballot.myballots.name, @ballot.myballots %></strong> -
+    <% if @ballot.vote_type == "add_tag_member" %>
+      Add Member Vote
+    <% elsif @ballot.vote_type == "remove_tag_member" %>
+      Remove Member Vote
+    <% elsif @ballot.vote_type == "new_tag" %>
+      New Tag Vote
+    <% end %>
+  <% elsif @ballot.myballots_type == "Email" %>
+    <strong>
+      Email Exception Vote
+    </strong>
+  <% end %>
+
+  </div>
+
+
+
+  <div id="show_content">
+    <% if @ballot.vote_type == "add_tag_member" %>
+      <h2 id="green_tag_display">
+        <% if User.find(@ballot.member_id) == current_user.id %>
+          <%= User.find(@ballot.author_id) %> has invited you to join a community tag!
+        <% else %>
+          <%= User.find(@ballot.author_id).name %> wants to invite <%= User.find(@ballot.member_id).name %> (<%= User.find(@ballot.member_id) %>) to the community tag.
+        <% end %>
+      </h2>
+    <% elsif @ballot.vote_type == "new_tag" %>
+      <h2 id="green_tag_display">
+        <%= User.find(@ballot.author_id) %> has created a new community tag!
+      </h2>
+    <% end %>
+
+
+
+    <% if @ballot.vote_type == "remove_tag_member" %>
+      <h2 id="red_tag_display"><%= User.find(@ballot.author_id) %> wants to remove <%= User.find(@ballot.member_id) %> from the community tag</h2>
+    <% elsif @ballot.vote_type == "exception" %>
+      <h2 id="red_tag_display"><%= User.find(@ballot.author_id) %> wants to make an exception</h2>
+      <div id="exception_vote_email">
+        <strong>From:</strong> <%= User.find(@email.author_id).name %><br />
+        <strong>To:</strong> <%= @email.users.join(", ") %><br />
+        <strong>Tags:</strong>
+        <% @email.tags.each do |t| %>
+          <em><%= t.name %></em> <%= " (" + t.users.join(", ") + ")" %><% if t != @email.tags.last %>, <% end %><% end %><br />
+        <strong>Subject:</strong> <%= @email.title %> <br />
+        <strong>Body: <%= @email.body %> </strong><br />
+      </div><br />
+    <% end %>
+
+    <p>Ballot status:
+      <% if @ballot.over? %>
+        Finished <%= image_tag("flag.png", :size => "20x20") %>
+      <% else %>
+        Ongoing <%= image_tag("vote.jpg", :size => "20x20") %>
+      <% end %>
+    </p>
+
+
+  </div>
+<% end %>
+<div id="comments">
+  <!-- put comment stuff here-->
+</div>

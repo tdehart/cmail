@@ -1,0 +1,10 @@
+//var $oldHtml = $("#notification").text();
+$("#notification").html('<%= escape_javascript(render :partial => "notifications", :locals => { :notifications => @notifications}) %>');
+//var $newHtml = $("#notification").text();
+
+//if ($oldHtml != $newHtml) {
+//  $("#notifications").animate({opacity:0}, 200, "linear", function () {
+//    $(this).animate({opacity:1}, 200);
+//  });
+//  $("#notifications").effect("highlight", {}, 3000);
+//}

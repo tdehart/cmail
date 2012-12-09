@@ -1,0 +1,39 @@
+<% title "Email Exception" %>
+<%= render :partial => "emails/show/error_buttons" %>
+<div id="email_header"><strong>Exception vote required. See details below.</strong></div>
+
+<div id="show_content">
+  <br />
+  <div id="exception_vote_email">
+    <strong>To:</strong> <%= @email.users.join(", ") %><br />
+    <strong>Tags:</strong>
+    <% @email.tags.each do |t| %>
+      <em><%= t.name %></em> <%= " (" + t.users.join(", ") + ")" %><% if t != @email.tags.last %>, <% end %><% end %><br />
+    <strong>Subject:</strong> <%= @email.title %> <br />
+    <strong>Body: <%= @email.body %> </strong><br />
+  </div>
+  <p id="exception">
+    The email you just sent was tagged with:
+    <strong><%= @email.tags.join(", ") %></strong>
+    <br /><br />
+    The following recipients are unauthorized to receive this email since they do not belong to the tag(s) above:
+    <strong><%= @unauthorized_recipients.join(", ") %></strong>
+    <br /><br />
+
+
+
+    You can press "Back to Compose" to change your Email or you can send this email anyway with an exception. <strong>Pressing "Send With Exception" will require group voting before the Email is sent.</strong>
+  </p>
+
+
+  <% form_tag exception_emails_path, :method => :put do %>
+    <%= hidden_field_tag "email", @email.id %>
+    <%= hidden_field_tag "authorized", @authorized_recipients %>
+    <%= submit_tag "Send With Exception", :class => "buttons" %>
+    <%= link_to("Discard Email", emails_path, :class => "buttons") %>
+  <% end %>
+</div>
+
+<div id="bottom_buttons">
+  <%= render :partial => "emails/show/error_buttons" %>
+</div>

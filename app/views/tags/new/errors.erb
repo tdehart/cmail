@@ -1,0 +1,32 @@
+<% title "Tag Errors" %>
+<%= render :partial => "emails/show/error_buttons" %>
+<div id="email_header"><strong>There was a problem with creating this tag. Please see details below.</strong></div>
+
+<div id="show_content">
+  <% if !invalid_members.empty? %>
+    <h3>One or more <u>members</u> were not found in the system. Press the 'Back' button in your browser to try again.</h3>
+
+    Please fix the following tag members: <br />
+    <% invalid_members.each do |m| %>
+      <strong><%= m %></strong> <br />
+    <% end %>
+
+  <% elsif !invalid_tags.empty? %>
+    <h3>One or more <u>tags</u> were not found in the system. Press the 'Back' button in your browser to try again.</h3>
+
+    Please fix the following tags: <br />
+    <% invalid_tags.each do |t| %>
+      <strong><%= t %></strong> <br />
+    <% end %>
+
+  <% elsif members.empty? %>
+    <h3>Please provide some members for this tag. Try entering some email addresses in the Members field. Press the 'Back' button in your browser to try again.</h3>
+  <% end %>
+
+
+
+</div>
+
+<div id="bottom_buttons">
+  <%= render :partial => "emails/show/error_buttons" %>
+</div>

@@ -1,0 +1,23 @@
+<% if !@notifications.empty? %>
+  <div id="notification">
+    <span id="notification_title"><%= pluralize(@notifications.count, "Ballot") %></span>
+    <ul id="notifications">
+      <% @notifications.each do |n| %>
+        <li>
+          <% if !n.finished? %>
+            <%= image_tag 'vote.jpg', :size => "20x20" %>
+          <% elsif n.approved %>
+            <%= image_tag 'checkmark.png', :size => "20x20" %>
+          <% else %>
+            <%= image_tag 'xmark.png', :size => "20x20" %>
+          <% end %>
+          <%= link_to(n.message, ballot_path(n.ballot)) %>
+
+          <% if n.finished == true %>
+            <%= link_to "remove", n, :method => :delete, :remote => true, :class => "delete_notification" %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

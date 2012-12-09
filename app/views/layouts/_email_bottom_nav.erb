@@ -1,0 +1,21 @@
+<nav>
+  <p><%= link_to 'Compose Email', new_email_path, :class=>"buttons" %></p>
+  
+  <ul>
+    <%= tag("li", (@filter.include?("inbox")) ? {:id => "bottom_focus"} : {}, true) %>
+    <%= link_to "Inbox", emails_path(:filter => "inbox") %>
+    </li>
+
+    <%= tag("li", (@filter.include?("sent")) ? {:id => "bottom_focus"} : {}, true) %>
+    <%= link_to "Sent Mail", emails_path(:filter => "sent") %>
+    </li>
+
+    <%= tag("li", (@filter.include?("trash")) ? {:id => "bottom_focus"} : {}, true) %>
+    <% if current_user.emails.trash_emails.unread_emails.count > 0 %>
+      <%= link_to "Trash (" + current_user.emails.trash_emails.unread_emails.count.to_s + ")", emails_path(:filter => "trash") %>
+    <% else %>
+      <%= link_to "Trash", emails_path(:filter => "trash") %>
+    <% end %>
+    </li>
+  </ul>
+</nav>

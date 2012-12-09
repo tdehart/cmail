@@ -1,0 +1,19 @@
+<% title "Draft New Email" %>
+
+<div class="form_content">
+  <% if @email.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@email.errors.count, "error") %> prohibited this email from being sent:</h2>
+      <ul>
+        <% @email.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= render :partial => "emails/new/buttons_top" %> <br/>
+  <%= render 'form' %>
+  <div id="bottom_buttons">
+    <%= render :partial => "emails/new/buttons_top" %>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<% title "Email Errors" %>
+<%= render :partial => "emails/show/error_buttons" %>
+<div id="email_header"><strong>There was a problem sending this email. Please see details below.</strong></div>
+
+<div id="show_content">
+  
+  <% if !@invalid_recipients.empty? %>
+    <h3>One or more <u>recipients</u> have incorrect email addresses. Press the 'Back' button in your browser to re-send the email.</h3>
+
+    Please fix the following recipients: <br />
+    <% @invalid_recipients.each do |r| %>
+      <strong><%= r %></strong> <br />
+    <% end %>
+  <% end %>
+      
+  <% if !@invalid_tags.empty? %>
+    <h3>One or more <u>tags</u> were not found on the system or are still being voted on. Note: If a Remove Member vote is pending for a particular tag, using this tag is not allowed until the vote is over. Press the 'Back' button in your browser to re-send the email.</h3>
+
+    Please fix the following tags: <br />
+    <% @invalid_tags.each do |t| %>
+      <strong><%= t %></strong> <br />
+    <% end %>
+  <% end %>
+</div>
+
+<div id="bottom_buttons">
+  <%= render :partial => "emails/show/error_buttons" %>
+</div>

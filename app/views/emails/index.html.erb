@@ -1,0 +1,60 @@
+<% title "Email Inbox" %>
+<% if !@votes.empty? %>
+  <!-- need to generate some partial here to direct user to ballots_index -->
+<% end %>
+<%= render :partial => "emails/index/buttons_top" %>
+<% if !@email.empty? %>
+  <table width="100%" class="tbl">
+    <% form_tag emailaction_emails_path, :method => :put, :remote => :true, :id => 'action_form' do %>
+      <% @email.each do |email| %>
+        <tr>
+          <td width="30px">
+            <%= check_box_tag "email_ids[]", email.id %>
+          </td>
+          <% if @filter.include?("sent") %>
+            <%= render :partial => "emails/index/to_field", :locals => {:email => email} %>
+          <% else %>
+            <%= render :partial => "emails/index/author_field", :locals => {:email => email} %>
+          <%  end %>
+          <td width="25px">
+            <% if !email.tags.empty? %>
+            <%= image_tag("lock2.png", :size => "20x20") %>
+            <% end %>
+          </td>
+          <td onclick="location.href='<%= email_path(email) %>'" class="overflow">
+            <% if email.mark_read %>
+              <%= email.title + " - " %> <span> <%= strip_tags(email.body) %></span>
+            <% else %>
+              <strong><%= email.title + " - " %> </strong><span> <%= strip_tags(email.body) %></span>
+            <% end %>
+          </td>
+          <td onclick="location.href='<%= email_path(email) %>'" width="80px" id="index_right_field">
+            <%= format_date email %>
+          </td>
+        </tr>
+      <% end %>
+      <%= hidden_field_tag "theaction", "none" %>
+    <% end %>
+
+  </table>
+<% else %>
+  <div class="no_content">
+    <% if @filter == ("inbox") %>
+      You currently have no Emails in your Inbox
+    <% elsif @filter == ("sent") %>
+      You have not yet sent any Emails. <br />
+      <%= link_to("Compose an email", new_email_path) %>
+    <% elsif @filter == ("drafts") %>
+      You have not saved any Email drafts. <br />
+      <%= link_to("Compose an email", new_email_path) %>
+    <% elsif @filter == ("trash") %>
+      You have not yet deleted any Emails <br />
+    <% else %>
+      No Emails to display
+    <% end %>
+  </div>
+<% end %>
+
+<div id="bottom_buttons">
+  <%= render :partial => "emails/index/buttons_bottom" %>
+</div>

@@ -1,0 +1,37 @@
+<div class="new_email_form" id="emailstyle">
+  <%= form_for @email do |f| %>
+    <label>To:</label>
+    <% if !@response.nil? %>
+      <%= text_area_tag :recipients, @recipients %>
+    <% else %>
+      <%= text_area_tag :recipients %>
+    <% end %>
+
+    <label>Tags:</label>
+    <% if !@response.nil? %>
+      <% if @response == "tag_email" %>
+        <%= text_field_tag :tags, @from_tag.to_s + ", " %>
+      <% elsif !@old_email.tags.empty? %>
+        <%= text_field_tag :tags, @old_email.tags.join(", ") + ", " %>
+      <% else %>
+        <%= text_field_tag :tags %>
+      <% end %>
+    <% else %>
+      <%= text_field_tag :tags %>
+    <% end %>
+
+
+    <label>Subject:</label>
+    <%= f.text_field :title %>
+
+    <% if !@response.nil? and @response == "forward" %>
+      <%= text_area_tag :email_body, @body, :rows => 20 %>
+    <% else %>
+      <%= f.text_area :body %>
+    <% end %>
+
+
+    <%= f.submit "Send", :class => 'buttons' %>
+
+  <% end %>
+</div>

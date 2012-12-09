@@ -1,0 +1,108 @@
+<% title "View Tag" %>
+<%= render :partial => "tags/show/buttons" %>
+<div id="email_header">
+  <strong><%= @tag.name %></strong>
+
+  <span id="header_buttons">
+    <%= link_to("Add Member", "#", :class => "buttons", :id => "add_member") %>
+    <%= link_to("Remove Member", "#", :class => "buttons", :id => "remove_member") %>
+    <%= link_to("Edit Description", "#", :class => "buttons", :id => "edit_description") %>
+    <%= link_to("Send Email", new_email_path(:tag => @tag, :response => "tag_email"), :class => "buttons") %>
+
+  </span>
+</div>
+<div id="show_content">
+  <h3>Members</h3>
+  <ul class="tag-show-users">
+    <% @tag.users.each do |u| %>
+        <li><%= u.name %> (<%= u.email %>)</li>
+    <% end %>
+  </ul>
+
+  <h3>Description</h3>
+  <%= @tag.description %>
+
+  <% if !@tag.ballots.empty? %>
+      <h3>Ballot History</h3>
+      <table width="70%" class="tbl">
+        <% @tag.ballots.reverse.each do |ballot| %>
+            <tr>
+              <td width="25px">
+                <% @myvote = ballot.votes.map { |x| x if x.user_id == current_user.id }.compact[0] %>
+                <% if !@myvote.nil? and @myvote.approval == true %>
+                    <%= image_tag("thumb_up.png", :size => "20x20") %>
+                <% elsif !@myvote.nil? and @myvote.approval == false %>
+                    <%= image_tag("thumb_down.png", :size => "20x20") %>
+                <% else %>
+                    <%= image_tag("minus.png", :size => "20x20") %>
+                <% end %>
+              </td>
+              <td width="25px">
+                <% if ballot.over == false %>
+                    <%= image_tag("vote.jpg", :size => "20x20") %>
+                <% elsif ballot.outcome == 'success' %>
+                    <%= image_tag("checkmark.png", :size => "20x20") %>
+                <% elsif ballot.outcome == 'failure' %>
+                    <%= image_tag("xmark.png", :size => "20x20") %>
+                <% end %>
+              </td>
+              <td onclick="location.href='<%= ballot_path(ballot) %>'" width="600px" class="overflow">
+                <% if ballot.vote_type == "add_tag_member" %>
+                    <% if User.find(ballot.member_id) == current_user.id %>
+                        <%= User.find(ballot.author_id) %> has invited you to join a community tag!
+                    <% else %>
+                        <%= User.find(ballot.author_id).name %>
+                        <strong>invited</strong> <%= User.find(ballot.member_id).name %>
+                        (<%= User.find(ballot.member_id) %>) to the community tag
+                    <% end %>
+                <% elsif ballot.vote_type == "remove_tag_member" %>
+                    <%= User.find(ballot.author_id) %> voted to
+                    <strong>remove</strong> <%= User.find(ballot.member_id) %> from the community tag
+                <% elsif ballot.vote_type == "new_tag" %>
+                    <%= User.find(ballot.author_id) %> created the community tag
+                <% elsif ballot.vote_type == "exception" %>
+                    <%= User.find(ballot.author_id) %> voted for an exception
+                <% end %>
+              </td>
+
+              <td onclick="location.href='<%= ballot_path(ballot) %>'" width="80px" id="index_right_field"><%= format_ballot_date ballot.created_at %></td>
+        <% end %>
+        </tr>
+  <% end %>
+  </table>
+</div>
+
+<div id="bottom_buttons">
+  <%= render :partial => "tags/show/buttons" %>
+</div>
+
+
+<div id="add_member_dialog">
+  <%= form_for(@tag) do |f| %>
+      <%= hidden_field_tag("edit_type", "add") %>
+      <%= f.label :email %>
+      <br/>
+      <%= text_field_tag :add_person %>
+      <%= f.submit "Submit", :class => "buttons" %>
+  <% end %>
+</div>
+
+<div id="remove_member_dialog">
+  <%= form_for(@tag) do |f| %>
+      <%= hidden_field_tag("edit_type", "remove") %>
+      <%= f.label :email %>
+      <br/>
+      <%= text_field_tag :remove_person %>
+      <%= f.submit "Submit", :class => "buttons" %>
+  <% end %>
+</div>
+
+
+<div id="edit_description_dialog">
+  <%= form_for(@tag) do |f| %>
+      <%= f.label :description %>
+      <br/>
+      <%= f.text_area :description %>
+      <%= f.submit "Submit", :class => 'buttons' %>
+  <% end %>
+</div>

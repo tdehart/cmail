@@ -1,0 +1,14 @@
+<h1> Votes </h1>
+<% @votes.each do |v| %>
+  <%= form_for(v) do |f| %>
+    Vote ID: <%= v.id %><br />
+    Ballot ID: <%= v.ballot_id %><br />
+    <div class="field">
+      <%= f.label :approval %><br />
+      <%= f.check_box :approval %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+<% end %>

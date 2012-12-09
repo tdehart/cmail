@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COPS - <%= yield(:title) || "Community Oriented Privacy System" %></title>
+  <%= stylesheet_link_tag "main", "jquery-ui", "jquery.notifications" %>
+  <%= javascript_include_tag "jquery", "rails", "application", "jquery.notifications-1.1.min", "jquery-ui-1.8.16.custom.min", "autocomplete-rails.js" %>
+  <%= csrf_meta_tag %>
+  <%= include_tiny_mce_if_needed %>
+
+</head>
+<body>
+<div id="container">
+  <% if user_signed_in? %>
+
+    <div id="top">
+
+      <nav>
+        Signed in as <%= current_user.name %>. Not you?
+        <%= link_to "Sign out", destroy_user_session_path %>
+      </nav>
+
+      <%= render 'notifications/notifications' %>
+
+      <h1>
+        <%= link_to root_url do %>
+          <% image_tag("cmail-logo2.png", :size => "252x89") %>
+        <% end %>
+      </h1>
+    </div>
+    <% if !notice.nil? %>
+      <div id="error_explanation">
+        <%= notice %>
+      </div>
+    <% end %>
+    <div id="left_nav">
+      <div id="left_top_nav">
+        <% if @filter.nil? then
+             @filter = ""
+           end %>
+        <%= render 'layouts/topnav' %>
+      </div>
+      <% if (yield(:title)).include?("Email") %>
+        <%= render 'layouts/email_bottom_nav' %>
+      <% elsif (yield(:title)).include?("Tag") %>
+        <%= render 'layouts/tag_bottom_nav' %>
+      <% elsif (yield(:title)).include?("Ballot") %>
+        <%= render 'layouts/ballot_bottom_nav' %>
+      <% end %>
+    </div>
+
+    <div id="content">
+      <%= yield %>
+    </div>
+
+    <div id="footer">
+
+    </div>
+
+  <% else %>
+    <%= yield %>
+  <% end %>
+</div>
+</body>
+</html>

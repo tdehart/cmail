@@ -1,0 +1,15 @@
+<nav>
+  <p><%= link_to 'Create Tag', new_tag_path, :class=>"buttons" %></p>
+
+
+  <ul>
+    <%= tag("li", (@filter.include?("current")) ? {:id => "bottom_focus"} : {}, true) %>
+    <%= link_to "Current", tags_path(:filter => "current") %>
+    </li>
+
+    <%= tag("li", (@filter.include?("archived")) ? {:id => "bottom_focus"} : {}, true) %>
+    <%= link_to "Archived", tags_path(:filter => "archived") %>
+    </li>
+  </ul>
+
+</nav>

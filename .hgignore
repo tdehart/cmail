@@ -1,0 +1,19 @@
+syntax: glob
+
+#ignore the mac files
+.DS_Store
+
+#Ignore the original files... that's why we have hg...
+*.orig
+
+#Ignore dev log because it's a pain to merge
+*.log
+
+#ignore server pid temp... because it's temp
+server.pid
+
+*.sqlite3
+
+
+
+*.idea

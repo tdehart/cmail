@@ -1,0 +1,52 @@
+<% title "View Email" %>
+<%= notice %>
+<%= render :partial => "emails/show/buttons_top" %>
+
+<div id="email_header">
+  <strong><%= @email.title %></strong>
+  <span id="header_buttons">
+    <%= link_to("Reply", new_email_path(:old_email => @email, :response => "reply"), :class => "buttons") %>
+    <%= link_to("Reply to all", new_email_path(:old_email => @email, :response => "reply_all"), :class => "buttons") %>
+    <%= link_to("Forward", new_email_path(:old_email => @email, :response => "forward"), :class => "buttons") %>
+  </span>
+</div>
+
+<div id="show_content">
+  <span id="email_tags">
+  <% if !@tags.empty? %>
+    Tagged with:
+        <% @tags.each do |t| %>
+        <% if t.users.include?(current_user) %>
+          <%= link_to(t.name, t) %>
+                <% if t != @tags.last %>, <% end %>
+        <% else %>
+          <%= t.name %>
+                <% if t != @tags.last %>, <% end %>
+        <% end %>
+        
+      <% end %>
+
+        <br/>
+  <% end %>
+
+    <%= "#{@email.sent_time.strftime('%m/%d/%Y')} at #{(@email.created_at - 4.hours).strftime('%I:%M%p')}" %>
+    </span>
+
+  <strong><%= @author.name %></strong> to
+  <%= @email.users.map { |e| e.name }.join(", ") %>
+
+  <p>
+    <%= @email.body.html_safe %>
+  </p>
+
+</div>
+
+<% form_for(@email, :remote => true) do |f| %>
+    <%= hidden_field_tag("delete", @email.trash) %>
+    <%= hidden_field_tag("mark_read", @email.mark_read) %>
+<% end %>
+
+<div id="bottom_buttons">
+  <%= render :partial => "emails/show/buttons_bottom" %>
+</div>
+

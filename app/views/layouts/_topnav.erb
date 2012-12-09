@@ -1,0 +1,24 @@
+<nav>
+  <ul>
+    <%= tag("li", (yield(:title).include?("Email")) ? {:id => "top_focus"} : {}, true) %>
+    <% if current_user.emails.not_trash_emails.unread_emails.count > 0 %>
+      <strong><%= link_to "Email (" + current_user.emails.not_trash_emails.unread_emails.count.to_s + ") ", emails_path(:filter => "inbox") %></strong>
+    <% else %>
+      <%= link_to "Email", emails_path(:filter => "inbox") %>
+    <% end %>
+
+    </li>
+
+    <%= tag("li", (yield(:title).include?("Tag")) ? {:id => "top_focus"} : {}, true) %>
+    <%= link_to "Tags", tags_path %>
+    </li>
+
+    <%= tag("li", (yield(:title).include?("Ballot")) ? {:id => "top_focus"} : {}, true) %>
+    <% if current_user.votes.pending.required.count > 0 %>
+      <%= link_to "Ballots (" + current_user.votes.pending.required.count.to_s + ") ", ballots_path(:filter => "pending") %>
+    <% else %>
+      <%= link_to "Ballots", ballots_path(:filter => "pending") %>
+    <% end %>
+    </li>
+  </ul>
+</nav>

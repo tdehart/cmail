@@ -1,0 +1,31 @@
+<% title "Tag Inbox" %>
+<%= render :partial => "tags/index/buttons_top" %>
+<% if !@tags.empty? %>
+  <table width="100%" class="tbl">
+    <%= form_tag tagaction_tags_path, :method => :put, :remote => :true, :id => 'action_form' do %>
+      <% @tags.each do |tag| %>
+        <tr>
+          <td width="30px">
+            <%= check_box_tag "tag_ids[]", tag.id %>
+          </td>
+          <td onclick="location.href='<%= tag_path(tag) %>'" width="200px"><%= tag.name %></td>
+          <td onclick="location.href='<%= tag_path(tag) %>'" class="overflow"><%= tag.description %></td>
+          <td onclick="location.href='<%= tag_path(tag) %>'" width="120px" id="index_right_field"><%= tag.users.count %> Members</td>
+        </tr>
+      <% end %>
+      <%= hidden_field_tag "theaction", "none" %>
+    <% end %>
+  </table>
+<% else %>
+  <div class="no_content">
+    <% if @filter == 'archived' %>
+      You have no archived tags. <br />
+    <% else %>
+      You are not associated with any tags. <br />
+      <%= link_to "Compose a Tag", new_tag_path %>
+    <% end %>
+  </div>
+<% end %>
+<div id="bottom_buttons">
+  <%= render :partial => "tags/index/buttons_bottom" %>
+</div>

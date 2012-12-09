@@ -1,0 +1,57 @@
+<% title "Ballot Inbox" %>
+<% if @filter == "pending" %>
+  <%= render :partial => "ballots/index/buttons_top" %>
+<% else %>
+  <%= render :partial => "ballots/index/no_buttons" %>
+<% end %>
+<% if !@votes.empty? %>
+  <table width="100%" class="tbl">
+    <% form_tag voteaction_votes_path, :method => :put, :remote => :true, :id => 'action_form' do %>
+      <% @votes.each do |vote| %>
+        <tr>
+          <% @ballot = vote.ballot %>
+          <td width="25px">
+            <% if vote.approval.nil? and @ballot.over == false %>
+              <%= check_box_tag "vote_ids[]", vote.id %>
+            <% else %>
+              <% if vote.approval %>
+                <%= image_tag("thumb_up.png", :size => "20x20") %>
+              <% else %>
+                <%= image_tag("thumb_down.png", :size => "20x20") %>
+              <% end %>
+            <% end %>
+          </td>
+          <td width="25px">
+            <% if @ballot.outcome == 'success' %>
+              <%= image_tag("checkmark.png", :size => "20x20") %>
+            <% elsif @ballot.outcome == 'failure' %>
+              <%= image_tag("xmark.png", :size => "20x20") %>
+            <% elsif @ballot.over == false %>
+              <%= image_tag("vote.jpg", :size => "20x20") %>
+            <% end %>
+
+          </td>
+
+          <%= render :partial => "ballots/index/table_display", :locals => {:ballot => @ballot} %>
+        </tr>
+      <% end %>
+      <%= hidden_field_tag "theaction", "none" %>
+    <% end %>
+
+  </table>
+<% else %>
+  <div class="no_content">
+    <% if @filter.include?("past") %>
+      You have no past votes. <br />
+    <% else %>
+      You have no pending votes. <br />
+    <% end %>
+  </div>
+<% end %>
+<div id="bottom_buttons">
+  <% if @filter == "pending" %>
+    <%= render :partial => "ballots/index/buttons_bottom" %>
+  <% else %>
+    <%= render :partial => "ballots/index/no_buttons" %>
+  <% end %>
+</div>

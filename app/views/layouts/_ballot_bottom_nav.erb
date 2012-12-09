@@ -1,0 +1,12 @@
+<nav>
+  <br />
+  <ul>
+    <%= tag("li", (@filter.include?("pending")) ? {:id => "bottom_focus"} : {}, true) %>
+    <%= link_to "Pending Votes", ballots_path(:filter => "pending") %>
+    </li>
+
+    <%= tag("li", (@filter.include?("past")) ? {:id => "bottom_focus"} : {}, true) %>
+    <%= link_to "Past Votes", ballots_path(:filter => "past") %>
+    </li>
+  </ul>
+</nav>

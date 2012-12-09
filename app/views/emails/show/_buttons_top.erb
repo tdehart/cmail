@@ -1,0 +1,5 @@
+<div class="content_buttons">
+  <strong><%= link_to "« Back to Inbox", emails_path %></strong>
+  <%= link_to "Delete", emails_path(:filter => @filter), :class => :buttons, :id => "delete_email_top" %>
+  <%= link_to "Mark as unread", emails_path(:filter => @filter), :class => :buttons, :id => "mark_unread_top" %>
+</div>

@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  content_id: 1
+  over: false
+  vote_type: MyString
+
+two:
+  content_id: 1
+  over: false
+  vote_type: MyString

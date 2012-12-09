@@ -1,0 +1,23 @@
+<% ballots.each do |ballot| %>
+  <table width="50%" class="tbl">
+    <tr>
+      <td onclick="location.href='<%= ballot_path(ballot) %>'" class="overflow">
+        <% if ballot.vote_type == "add_tag_member" %>
+          <% if User.find(ballot.member_id) == current_user.id %>
+            <%= User.find(ballot.author_id) %> has invited you to join a group!
+          <% else %>
+            <%= User.find(ballot.author_id).name %> wants to invite <%= User.find(ballot.member_id).name %> (<%= User.find(ballot.member_id) %>) to the community tag
+          <% end %>
+        <% elsif ballot.vote_type == "remove_tag_member" %>
+          <%= User.find(ballot.author_id) %> wants to remove <%= User.find(ballot.member_id) %> from the community tag
+        <% elsif ballot.vote_type == "new_tag" %>
+          <%= User.find(ballot.author_id) %> has created a new community tag!
+        <% elsif ballot.vote_type == "exception" %>
+          <%= User.find(ballot.author_id) %> wants to make an exception
+        <% end %>
+      </td>
+
+      <td onclick="location.href='<%= ballot_path(ballot) %>'" width="80px" id="index_right_field"><%= format_date ballot.created_at %></td>
+    <% end %>
+  </tr>
+</table>
